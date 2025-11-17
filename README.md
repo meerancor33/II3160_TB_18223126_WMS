@@ -54,6 +54,7 @@ Fokus utama milestone ini adalah:
    Uvicorn running on http://127.0.0.1:8000
    Application startup complete.
    
+   Kemudian, klik tombol Ctrl + klik tautan 'http://127.0.0.1:8000' untuk mengakses dokumentasi API dengan Swagger UI.
    Pada M4 ini saya rancang ketika user mengakses 'http://127.0.0.1:8000' akan langsung redirect ke dokumentasi API dengan Swagger UI.
    ```
 ---
