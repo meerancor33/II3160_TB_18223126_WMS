@@ -145,6 +145,21 @@ def decrease_stock(sku: str, payload: DecreaseStockRequest):
         return to_item_dto(item)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@app.get("/ohs/{sku}/reservations")
+def get_reservations(sku: str):
+    try:
+        item = service.get_item(sku)
+        return [
+            {
+                "id": r.id,
+                "order_id": r.order_id,
+                "qty": r.reserved_qty.amount
+            }
+            for r in item.reservations
+        ]
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 # ================ MANAGER VIEW =================
