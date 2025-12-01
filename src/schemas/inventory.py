@@ -1,20 +1,11 @@
+from pydantic import BaseModel
 from typing import List, Optional
-from pydantic import BaseModel, Field
-
-
-class InventoryStats(BaseModel):
-    sku: str
-    on_hand: int
-    reserved: int
-    available: int
-    uom: str
-    low_stock: bool
 
 
 class ReservationDto(BaseModel):
     id: str
     order_id: str
-    qty: int
+    reserved_qty: int
 
 
 class InventoryItemDto(BaseModel):
@@ -30,7 +21,7 @@ class InventoryItemDto(BaseModel):
 
 
 class CreateItemRequest(BaseModel):
-    sku: str = Field(..., example="SKU-001")
+    sku: str
     initial_qty: int = 0
     uom: str = "pcs"
     min_qty: int = 0
@@ -62,3 +53,12 @@ class AdjustStockRequest(BaseModel):
 
 class SetThresholdRequest(BaseModel):
     min_qty: int
+
+
+class InventoryStats(BaseModel):
+    sku: str
+    on_hand: int
+    reserved: int
+    available: int
+    uom: str
+    low_stock: bool
