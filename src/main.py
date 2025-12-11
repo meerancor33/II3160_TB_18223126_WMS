@@ -3,8 +3,11 @@ from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
-
+from sqlalchemy import text
+from src.db import get_db
+import datetime
 import logging
+import time
 
 from src.auth import (
     Token,
@@ -41,11 +44,13 @@ from pydantic import BaseModel
 # =============================================================
 # STARTUP
 # =============================================================
-
 app = FastAPI(title="Inventory Control API with JWT Auth")
 init_db()
 
+START_TIME = time.time()
+
 repo = InventoryRepositoryDB()
+service = InventoryService(repo)
 service = InventoryService(repo)
 
 @app.on_event("startup")
@@ -54,6 +59,7 @@ async def startup_event():
         "\n=============================================\n"
         "FastAPI server is running inside Docker\n"
         "Open: http://localhost:8000/docs\n"
+        "Health Check: http://localhost:8000/health\n"
         "Note: http://0.0.0.0:8000 TIDAK bisa dibuka dari browser\n"
         "=============================================\n"
     )
@@ -107,8 +113,18 @@ def root():
     return RedirectResponse(url="/docs")
 
 @app.get("/health")
-def health_check():
-    return {"status": "ok"}
+def health_check(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        db_status = "up"
+    except Exception as e:
+        db_status = "down"
+
+    return {
+        "status": "ok" if db_status == "up" else "degraded",
+        "database": db_status,
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+    }
 
 
 # =============================================================
