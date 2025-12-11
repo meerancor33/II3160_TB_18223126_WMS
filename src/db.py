@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 from src.domain.inventory import InventoryItem, SKU, Quantity, Threshold, Reservation
 
-DATABASE_URL = "sqlite:///./app.db"
+DATABASE_URL = "sqlite:////data/app.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)

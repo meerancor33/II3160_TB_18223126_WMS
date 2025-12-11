@@ -4,6 +4,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
 
+import logging
+
 from src.auth import (
     Token,
     authenticate_user,
@@ -46,6 +48,15 @@ init_db()
 repo = InventoryRepositoryDB()
 service = InventoryService(repo)
 
+@app.on_event("startup")
+async def startup_event():
+    logging.warning(
+        "\n=============================================\n"
+        "FastAPI server is running inside Docker\n"
+        "Open: http://localhost:8000/docs\n"
+        "Note: http://0.0.0.0:8000 TIDAK bisa dibuka dari browser\n"
+        "=============================================\n"
+    )
 
 # =============================================================
 # HELPERS
