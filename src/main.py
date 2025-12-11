@@ -106,6 +106,10 @@ def to_item_dto(item) -> InventoryItemDto:
 def root():
     return RedirectResponse(url="/docs")
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 
 # =============================================================
 # AUTH: REGISTER
