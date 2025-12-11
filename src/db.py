@@ -1,12 +1,26 @@
 from typing import Generator, Optional, List, Dict
+import os
 
 from sqlalchemy import Column, String, Integer, Boolean, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 from src.domain.inventory import InventoryItem, SKU, Quantity, Threshold, Reservation
 
-DATABASE_URL = "sqlite:////data/app.db"
+# DATABASE_URL = "sqlite:////data/app.db"
 
+# ==========================
+# Path Database (Windows + Docker friendly)
+# ==========================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # src/
+DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+os.makedirs(DATA_DIR, exist_ok=True)  # pastikan folder ada
+
+DB_FILE = os.path.join(DATA_DIR, "app.db")
+DATABASE_URL = f"sqlite:///{DB_FILE}"
+
+# ==========================
+# Engine & Session
+# ==========================
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
