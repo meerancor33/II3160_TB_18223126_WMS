@@ -11,8 +11,10 @@ class SKU:
     value: str
 
     def __post_init__(self):
-        if not self.value:
+        cleaned = self.value.strip()  # normalize whitespace
+        if not cleaned:
             raise ValueError("SKU cannot be empty")
+        object.__setattr__(self, "value", cleaned)
 
 
 @dataclass(frozen=True)
@@ -142,12 +144,30 @@ class InventoryItem:
         self.reserved = self.reserved.sub(res.reserved_qty)
         self._ensure_invariants()
 
-    def adjust(self, delta: Quantity, reason: str = "ADJUST"):
-        if delta.amount >= 0:
-            self.on_hand = self.on_hand.add(delta)
+    def adjust(self, delta: int, reason: str = "ADJUST"):
+        """
+        Adjust stock using a positive or negative integer delta.
+        Rules:
+        - delta > 0  → increase stock
+        - delta < 0  → decrease stock
+        - Quantity must always be positive inside the domain
+        """
+        if delta == 0:
+            return  # no operation
+        if delta > 0:
+            # Positive adjustment: add stock
+            self.on_hand = self.on_hand.add(Quantity(delta, self.on_hand.uom))
+            moved_qty = Quantity(delta, self.on_hand.uom)
         else:
-            self.on_hand = self.on_hand.sub(Quantity(-delta.amount, delta.uom))
-        self.moves.append(StockMove.create("ADJUST", delta, reason))
+            # Negative adjustment: reduce stock
+            abs_delta = -delta
+            if abs_delta > self.on_hand.amount:
+                raise ValueError("Cannot adjust below zero stock")
+            self.on_hand = self.on_hand.sub(Quantity(abs_delta, self.on_hand.uom))
+            moved_qty = Quantity(abs_delta, self.on_hand.uom)
+        # Record stock movement
+        self.moves.append(StockMove.create("ADJUST", moved_qty, reason))
+        # Re-validate invariants
         self._ensure_invariants()
 
     def is_low_stock(self) -> bool:

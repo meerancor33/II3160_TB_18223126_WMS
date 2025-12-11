@@ -44,7 +44,7 @@ class InventoryService:
 
     def adjust_stock(self, sku, delta, reason):
         item = self.get_item(sku)
-        item.adjust(Quantity(delta, item.on_hand.uom), reason)
+        item.adjust(delta, reason)
         return self.repo.save(item)
 
     def reserve_stock(self, sku, order_id, qty):

@@ -1,0 +1,15 @@
+[run]
+omit =
+    src/db.py
+    src/auth.py
+    src/main.py
+    src/schemas/*
+    src/services/__init__.py
+    src/domain/__init__.py
+    src/tests/*
+    */__init__.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == "__main__":

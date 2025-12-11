@@ -1,6 +1,10 @@
 # Byte-compiled / optimized
 __pycache__/
 *.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*.pyd
 *$py.class
 
 # Virtual environments
