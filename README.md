@@ -8,6 +8,7 @@ Fokus utama tugas ini adalah:
   - Admin / Staf Gudang
   - Order / Outbound / Inbound (melalui Open Host Service / OHS)
   - Manajer (monitoring stok & low stock)
+
 ---
 ## Stack Teknologi
 - **Python ≥ 3.10**
@@ -1068,6 +1069,44 @@ password: wrong_password
 }
 ```
 
+---
+
+## 🚀 CI/CD
+
+**CI (Continuous Integration)** adalah proses otomatis yang:
+- Menjalankan unit tests setiap kali ada commit/push
+- Mengecek kualitas kode (linting)
+- Menghitung code coverage
+- Menolak merge jika tests gagal
+
+**CD (Continuous Deployment)** adalah:
+- Build Docker image otomatis
+- Push ke Docker Registry
+- Deploy ke production otomatis
+
+### Cara Kerja Singkat
+
+```
+Developer push code
+    ↓
+Trigger CI Pipeline
+    ↓
+Run Tests & Linting
+    ↓
+Build Docker Image (jika tests passed)
+    ↓
+Deploy ke Production (opsional)
+```
+
+Monitor di tab **Actions** di GitHub.
+
+| Status | Simbol | Arti |
+|--------|--------|------|
+| Berhasil | ✅ | Tests passed, build succeeded |
+| Gagal | ❌ | Tests failed, build error |
+| Sedang Berjalan | ⏳ | Pipeline in progress |
+| Pending | ⏸️ | Waiting for approval/action |
+| Cancelled | 🛑 | Pipeline cancelled |
 
 ---
 
