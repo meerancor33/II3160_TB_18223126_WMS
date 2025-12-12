@@ -218,6 +218,107 @@ pytest -vv --color=yes --cov=src --cov-report=term-missing
 - `--cov=src` : Code coverage untuk folder `src/`
 - `--cov-report=term-missing` : Tampilkan lines yang tidak tercakup tests
 
+---
+
+**Output yang dihasilkan:**
+
+1. **Test Results** - Setiap test case ditampilkan:
+   ```
+   tests/test_domain_inventory.py::test_create_item PASSED                     [10%]
+   tests/test_domain_inventory.py::test_reserve_stock PASSED                   [20%]
+   tests/test_inventory_service.py::test_get_item PASSED                       [30%]
+   ```
+
+2. **Coverage Report** - Persentase coverage per file:
+   ```
+   Name                          Stmts   Miss  Cover   Missing
+   ─────────────────────────────────────────────────────────────
+   src/auth.py                      45      3    93%    25-27
+   src/db.py                        62      5    92%    45-48
+   src/domain/inventory.py          85      2    98%    120
+   src/services/inventory_service.py 120     8    93%    45-50,85
+   src/schemas/inventory.py         35      0   100%
+   ─────────────────────────────────────────────────────────────
+   TOTAL                           347     18    95%
+   ```
+
+3. **Missing Lines** - Lines yang belum tercakup tests:
+   - `src/auth.py: 25-27` → Lines 25-27 tidak ditest
+   - `src/db.py: 45-48` → Lines 45-48 tidak ditest
+   - `src/domain/inventory.py: 120` → Line 120 tidak ditest
+
+**Interpretasi Coverage:**
+- 🟢 **95%+ Coverage** → Excellent (hampir semua code teruji)
+- 🟡 **80-94% Coverage** → Good (cukup teruji)
+- 🟠 **70-79% Coverage** → Fair (perlu improvement)
+- 🔴 **<70% Coverage** → Poor (banyak code tidak teruji)
+
+**Target Coverage di Project Ini:** 🎯 **>95%**
+
+---
+
+### Cara Membaca Coverage Report
+
+| Kolom | Arti |
+|-------|------|
+| **Name** | Nama file |
+| **Stmts** | Total statements (baris code) |
+| **Miss** | Baris yang tidak tercakup |
+| **Cover** | Persentase coverage |
+| **Missing** | List line numbers yang tidak ditest |
+
+**Contoh:** `src/auth.py: 45 Stmts, 3 Miss, 93% Cover`
+- Total 45 baris code
+- 3 baris tidak ditest (93% coverage)
+- Lines 25-27 belum ditest
+
+---
+
+### Optimasi Coverage
+
+Untuk meningkatkan coverage, tambah tests untuk lines yang missing:
+
+```python
+# Jika Missing: src/auth.py 25-27
+# Tambah test untuk case tersebut
+
+def test_invalid_token():
+    """Test untuk lines 25-27"""
+    with pytest.raises(Exception):
+        validate_token("invalid_token")
+```
+
+Setelah menambah test, run command lagi:
+```bash
+pytest -vv --color=yes --cov=src --cov-report=term-missing
+```
+
+---
+
+### 🎯 Coverage Report Hasil Test
+
+Berikut adalah hasil test coverage dari project ini:
+
+```
+---------- coverage: platform win32, python 3.13.5-final-0 ----------
+Name                          Stmts   Miss  Cover    Missing
+─────────────────────────────────────────────────────────────
+src\domain\inventory.py          117      0   100%
+src\services\inventory_service.py 47      0   100%
+─────────────────────────────────────────────────────────────
+TOTAL                            164      0   100%
+```
+
+**Status: ✅ 100% Coverage Achieved!**
+
+- ✅ **src/domain/inventory.py** - 117 statements, **100% covered**
+- ✅ **src/services/inventory_service.py** - 47 statements, **100% covered**
+- ✅ **Total** - 164 statements, **0 missed, 100% coverage**
+
+Semua code teruji dengan sempurna! 🎉
+
+---
+
 ### Unit Tests (Docker)
 ```bash
 docker compose up test --build
